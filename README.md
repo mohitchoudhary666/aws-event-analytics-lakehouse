@@ -39,7 +39,7 @@ flowchart LR
 - Terraform for a private, versioned, encrypted S3 lake; an AWS Glue job and Data Catalog table; an Athena workgroup with an enforced encrypted query-results path; scoped Glue IAM permissions; and optional daily scheduling.
 - Athena SQL for daily revenue, a session-level conversion funnel, regional average order value, and top product categories. Time-bounded queries include the date partition filter.
 - A cached dashboard with query timeout, configurable 7–90 day window, revenue trend, conversion funnel, region and category charts.
-- Docker packaging for the dashboard and GitHub Actions checks for Python style and Terraform formatting.
+- Docker packaging for the dashboard and GitHub Actions checks for Python lint and Terraform configuration validity.
 
 ## AWS data layout
 
@@ -140,3 +140,4 @@ Your local AWS identity needs permission to query Athena, read the Glue Catalog,
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
