@@ -73,13 +73,18 @@ resource "aws_iam_role_policy" "glue" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["s3:ListBucket", "s3:ListBucketMultipartUploads", "s3:GetBucketLocation"]
+        Action   = ["s3:ListBucket"]
         Resource = [aws_s3_bucket.lake.arn]
         Condition = {
           StringLike = {
             "s3:prefix" = ["raw/*", "curated/*", "quarantine/*", "scripts/*", "temporary/*"]
           }
         }
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["s3:GetBucketLocation", "s3:ListBucketMultipartUploads"]
+        Resource = [aws_s3_bucket.lake.arn]
       },
       {
         Effect = "Allow"
@@ -92,7 +97,7 @@ resource "aws_iam_role_policy" "glue" {
       },
       {
         Effect = "Allow"
-        Action = ["s3:PutObject", "s3:DeleteObject", "s3:AbortMultipartUpload"]
+        Action = ["s3:PutObject", "s3:DeleteObject", "s3:AbortMultipartUpload", "s3:ListMultipartUploadParts"]
         Resource = [
           "${aws_s3_bucket.lake.arn}/curated/*",
           "${aws_s3_bucket.lake.arn}/quarantine/*",
@@ -276,3 +281,4 @@ resource "aws_scheduler_schedule" "daily" {
     input    = jsonencode({ JobName = aws_glue_job.transform.name })
   }
 }
+
