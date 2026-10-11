@@ -1,0 +1,4 @@
+aws_region           = "ap-south-1"
+project_name         = "cloud-event-analytics"
+enable_daily_schedule = false
+max_reject_rate      = 0.05

@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform.tfvars
+!terraform.tfvars.example
+data/generated/
+dashboard/.streamlit/secrets.toml
