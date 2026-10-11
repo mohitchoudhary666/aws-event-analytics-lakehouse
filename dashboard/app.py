@@ -21,7 +21,8 @@ database = os.getenv("ATHENA_DATABASE", "event_analytics")
 table = os.getenv("ATHENA_TABLE", "events_curated")
 workgroup = os.getenv("ATHENA_WORKGROUP", "cloud-event-analytics-workgroup")
 output = os.getenv("ATHENA_OUTPUT", "")
-days_back = st.sidebar.slider("Analysis window (days)", min_value=7, max_value=90, value=30)
+default_days = min(90, max(7, int(os.getenv("DAYS_BACK", "30"))))
+days_back = st.sidebar.slider("Analysis window (days)", min_value=7, max_value=90, value=default_days)
 
 if not re.fullmatch(r"[A-Za-z0-9_]+", database) or not re.fullmatch(r"[A-Za-z0-9_]+", table):
     st.error("ATHENA_DATABASE and ATHENA_TABLE may contain only letters, digits, and underscores.")
@@ -194,3 +195,4 @@ try:
 except (BotoCoreError, ClientError, NoCredentialsError, RuntimeError, TimeoutError) as error:
     st.error(f"Could not load analytics from Athena: {error}")
     st.caption("Confirm AWS credentials, region, workgroup, table partitions, and Athena S3 result access.")
+
