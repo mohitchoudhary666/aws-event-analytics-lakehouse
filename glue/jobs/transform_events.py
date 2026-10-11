@@ -81,19 +81,9 @@ print(
 if rejected_count:
     (
         rejected.withColumn("ingested_at", F.current_timestamp())
-        .write.mode("append")
+        .write.mode("overwrite")
         .partitionBy("event_date", "region")
         .json(args["QUARANTINE_PATH"])
-    )
-
-if valid_count:
-    (
-        # Full refresh from the retained raw prefix makes reruns deterministic:
-        # duplicate event IDs across separate uploads are removed before this write.
-        valid.write.mode("overwrite")
-        .option("compression", "snappy")
-        .partitionBy("event_date", "region")
-        .parquet(args["TARGET_PATH"])
     )
 
 if not valid_count:
@@ -104,4 +94,14 @@ if reject_rate > float(args["MAX_REJECT_RATE"]):
         f"{float(args['MAX_REJECT_RATE']):.1%}. Inspect the quarantine prefix."
     )
 
+# Full refresh from the retained raw prefix makes reruns deterministic:
+# duplicate event IDs across separate uploads are removed before this write.
+(
+    valid.write.mode("overwrite")
+    .option("compression", "snappy")
+    .partitionBy("event_date", "region")
+    .parquet(args["TARGET_PATH"])
+)
+
 job.commit()
+
